@@ -1,0 +1,78 @@
+{
+    "name": "deluge-online",
+    "version": "1.0.0",
+    "description": "Typescript Project",
+    "main": "dist/index.js",
+    "license": "MIT",
+    "scripts": {
+        "start": "ts-node -r tsconfig-paths/register src/index.ts",
+        "build": "webpack",
+        "lint": "tslint src/**/*.ts",
+        "test": "jest --colors --watchAll",
+        "test:ci": "cross-env CI=true jest --colors",
+        "format": "prettier --write \"src/**/*\"",
+        "conflict-rules": "tslint-config-prettier-check ./tslint.json"
+    },
+    "jest": {
+        "globals": {
+            "ts-jest": {
+                "tsConfig": "<rootDir>/tsconfig.json"
+            }
+        },
+        "collectCoverageFrom": ["src/**/*.{js,jsx,ts,tsx}"],
+        "moduleNameMapper": {
+            "^~/(.*)$": "<rootDir>/src/$1"
+        },
+        "moduleDirectories": ["<rootDir>/src", "node_modules"],
+        "preset": "ts-jest"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.{ts,tsx,js,jsx}": [
+            "prettier --write",
+            "tslint -c tslint.json --fix",
+            "git add"
+        ],
+        "*.{json,css}": ["prettier --write", "git add"]
+    },
+    "prettier": {
+        "parser": "typescript",
+        "semi": false,
+        "singleQuote": true,
+        "overrides": [
+            {
+                "files": "*.json",
+                "options": {
+                    "parser": "json"
+                }
+            }
+        ]
+    },
+    "devDependencies": {
+        "@types/jest": "^24.0.6",
+        "@types/node": "^10.12.24",
+        "cross-env": "^5.2.0",
+        "fork-ts-checker-webpack-plugin": "^0.5.2",
+        "husky": "^1.1.4",
+        "jest": "^24.1.0",
+        "lint-staged": "^8.1.1",
+        "npm-run-all": "^4.1.3",
+        "prettier": "^1.16.4",
+        "ts-jest": "^24.0.0",
+        "ts-loader": "^5.3.3",
+        "ts-node": "^8.0.2",
+        "tsconfig-paths": "^3.8.0",
+        "tsconfig-paths-webpack-plugin": "^3.2.0",
+        "tslint": "^5.12.1",
+        "tslint-config-prettier": "^1.16.0",
+        "tslint-plugin-prettier": "^2.0.1",
+        "typescript": "^3.3.3",
+        "webpack": "^4.29.5",
+        "webpack-cli": "^3.1.2",
+        "webpack-node-externals": "^1.7.2"
+    }
+}
