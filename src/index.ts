@@ -2,6 +2,9 @@ import * as dotenv from 'dotenv-flow'
 import express from 'express'
 import mongoose, { Schema } from 'mongoose'
 
+import imaps from 'imap-simple'
+import * as _ from 'lodash'
+
 dotenv.config()
 
 const app = express()
@@ -11,7 +14,6 @@ const BadooModel = mongoose.model(
     'Badoo',
     new Schema(
         {
-            __id: Number,
             email: String,
             num: Number,
             pwd_hash: String,
@@ -53,35 +55,23 @@ app.get('/:num@:template', (req: any, res: any) => {
         .limit(parseInt(process.env.RECEIPIENT_LIMIT || '15', 10))
         .then((recipients: any[]) => {
             // setting status to `false`
-            const now = Date.now()
             const emails = recipients.map((it: any) => it.email)
-            return BadooModel.updateMany(
-                { email: { $in: emails } },
-                { $set: { status: { num, template, updated: now } } }
+            console.log(
+                `Generated email for: ${recipients.map((it: any) => it.email)}`
             )
-                .then(() =>
-                    // sending `mailto:` redirect
-                    res.redirect(
-                        mailto(
-                            require(`../templates/${template}.js`)({
-                                num,
-                                template,
-                                recipients: recipients
-                                    .concat({ email: process.env.TRAP_MAILBOX })
-                                    .map((it: any) => it.email)
-                                    .join(','),
-                                url: `http://mail.softsky.company/${num}@${template}`
-                            })
-                        )
-                    )
+            res.redirect(
+                mailto(
+                    require(`../templates/${template}.js`)({
+                        num,
+                        template,
+                        recipients: recipients
+                            .concat({ email: process.env.TRAP_MAILBOX })
+                            .map((it: any) => it.email)
+                            .join(','),
+                        url: `http://mail.softsky.company/${num}@${template}`
+                    })
                 )
-                .then(() =>
-                    console.log(
-                        `Generated email for: ${recipients.map(
-                            (it: any) => it.email
-                        )}`
-                    )
-                )
+            )
         })
         .catch(err => {
             console.log(err)
@@ -89,7 +79,80 @@ app.get('/:num@:template', (req: any, res: any) => {
         })
 })
 
+const config = {
+    imap: {
+        user: 'trap@softsky.com.ua',
+        password: 'Xt12Ujnj12',
+        host: 'imap.gmail.com',
+        port: 993,
+        tls: true,
+        tlsOptions: {
+            rejectUnauthorized: false
+        },
+        authTimeout: 30000
+        // debug: console.log
+    }
+}
+
+const searchCriteria = ['UNSEEN']
+
+const fetchOptions = {
+    bodies: ['HEADER.FIELDS (FROM TO DATE)'],
+    markSeen: true
+}
+
+const searchAndFetchPromise = async (conn: any) =>
+    conn
+        .search(searchCriteria, fetchOptions)
+
+        .then((results: any) =>
+            _.flatten(
+                results.map((it: any) => it.parts.map((that: any) => that.body))
+            )
+        )
+        .then((bodies: any[]) => {
+            const now = Date.now()
+            let recipients: string[] = bodies.map((it: any) =>
+                it.to.map((to: any) =>
+                    to
+                        .split(/,/)
+                        .map((i: string) =>
+                            i.match(
+                                /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi
+                            )
+                        )
+                )
+            )
+
+            recipients = _.uniq(
+                _.flattenDepth(
+                    _.pull(recipients, process.env.TRAP_MAILBOX as string),
+                    3
+                )
+            )
+
+            return BadooModel.updateMany(
+                { email: { $in: recipients } },
+                { $set: { status: { updated: now } } }
+            ).then(() => console.log('Updated recipients:', recipients))
+        })
+
 // start the Express server
 app.listen(port, () => {
     console.log(`Server started at http://localhost:${port}`)
+
+    console.log('Connecting to IMAP')
+    imaps
+        .connect(config)
+        .then((conn: any) =>
+            conn
+                .openBox('INBOX')
+                .then(() =>
+                    conn.on('mail', (numMessages: number) =>
+                        searchAndFetchPromise(conn)
+                    )
+                )
+                .then(() => searchAndFetchPromise(conn))
+        )
+        .catch((err: any) => console.error(err))
 })
