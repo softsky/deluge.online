@@ -5,31 +5,22 @@ import mongoose, { Schema } from 'mongoose'
 import imaps from 'imap-simple'
 import * as _ from 'lodash'
 
+import { BadooModel } from './models'
+
 dotenv.config()
 
 const app = express()
-const port = process.env.SERVER_PORT || 8080 // default port to listen
+const port = process.env.PORT || 8080 // default port to listen
 
-const BadooModel = mongoose.model(
-    'Badoo',
-    new Schema(
-        {
-            email: String,
-            num: Number,
-            pwd_hash: String,
-            fullname: String,
-            firstname: String,
-            lastname: String,
-            status: Object,
-            date_of_birth: Date,
-            age_as_of_2012: Number,
-            gender: String,
-            num1: Number,
-            num2: Number,
-            num3: Number
-        },
-        { collection: 'badoo' }
-    )
+import nodemailer from 'nodemailer'
+import { pugEngine } from 'nodemailer-pug-engine'
+
+mailer.use(
+    'compile',
+    pugEngine({
+        templateDir: __dirname + '/templates',
+        pretty: true
+    })
 )
 
 mongoose
@@ -40,7 +31,7 @@ mongoose
     })
 
 const mailto = (mobj: any) =>
-    `mailto:${mobj.to}?subject=${mobj.subject}&body=${mobj.body}`
+    `mailto:${mobj.to}?cc=${mobj.cc}&subject=${mobj.subject}&body=${mobj.body}`
 
 // define a route handler for the default home page
 app.get('/:num@:template', (req: any, res: any) => {
@@ -49,10 +40,10 @@ app.get('/:num@:template', (req: any, res: any) => {
     console.log(template)
     // lookng up for next recipiets to deliver message to
     return BadooModel.find(
-        { num1: num, status: { $exists: false } },
+        { num1: num, email: /\.ru$/, status: { $exists: false } },
         { _id: 1, email: 1, status: 1 }
     )
-        .limit(parseInt(process.env.RECEIPIENT_LIMIT || '15', 10))
+        .limit(parseInt(process.env.RECIPIENT_LIMIT || '50', 10))
         .then((recipients: any[]) => {
             // setting status to `false`
             const emails = recipients.map((it: any) => it.email)
@@ -64,16 +55,13 @@ app.get('/:num@:template', (req: any, res: any) => {
                     require(`../templates/${template}.js`)({
                         num,
                         template,
-                        recipients: recipients
-                            .concat({ email: process.env.TRAP_MAILBOX })
-                            .map((it: any) => it.email)
-                            .join(','),
-                        url: `http://mail.softsky.company/${num}@${template}`
+                        to: process.env.CHECKME_MAILBOX,
+                        cc: recipients.map((it: any) => it.email).join(',')
                     })
                 )
             )
         })
-        .catch(err => {
+        .catch((err: any) => {
             console.log(err)
             res.status(500).send(err)
         })
@@ -81,7 +69,7 @@ app.get('/:num@:template', (req: any, res: any) => {
 
 const config = {
     imap: {
-        user: 'trap@softsky.com.ua',
+        user: 'checkme@softsky.company',
         password: 'Xt12Ujnj12',
         host: 'imap.gmail.com',
         port: 993,
@@ -97,14 +85,13 @@ const config = {
 const searchCriteria = ['UNSEEN']
 
 const fetchOptions = {
-    bodies: ['HEADER.FIELDS (FROM TO DATE)'],
+    bodies: ['HEADER.FIELDS (FROM TO CC BCC DATE)'],
     markSeen: true
 }
 
 const searchAndFetchPromise = async (conn: any) =>
     conn
         .search(searchCriteria, fetchOptions)
-
         .then((results: any) =>
             _.flatten(
                 results.map((it: any) => it.parts.map((that: any) => that.body))
@@ -113,23 +100,21 @@ const searchAndFetchPromise = async (conn: any) =>
         .then((bodies: any[]) => {
             const now = Date.now()
             let recipients: string[] = bodies.map((it: any) =>
-                it.to.map((to: any) =>
-                    to
-                        .split(/,/)
-                        .map((i: string) =>
-                            i.match(
-                                /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi
+                it.to
+                    .concat(it.cc, it.bcc)
+                    .map((to: any) =>
+                        to
+                            .split(/,/)
+                            .map((i: string) =>
+                                i.match(
+                                    /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi
+                                )
                             )
-                        )
-                )
+                    )
             )
 
-            recipients = _.uniq(
-                _.flattenDepth(
-                    _.pull(recipients, process.env.TRAP_MAILBOX as string),
-                    3
-                )
-            )
+            recipients = _.pull(_.uniq(_.flattenDepth(recipients, 3)), process
+                .env.CHECKME_MAILBOX as string)
 
             return BadooModel.updateMany(
                 { email: { $in: recipients } },

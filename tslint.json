@@ -4,7 +4,8 @@
         "semicolon": [true, "never"],
         "object-literal-sort-keys": false,
         "no-var-requires": false,
-        "prettier": true
+        "prettier": true,
+        "object-literal-sort-keys": [false]
     },
     "extends": [
         "tslint:recommended",
