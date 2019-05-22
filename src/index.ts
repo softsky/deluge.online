@@ -45,7 +45,7 @@ const email = new Email({
 
 email
     .send({
-        template: 'test',
+        template: 'account.report',
         message: {
             to: 'a.gutsal+temp@softsky.company'
         },
