@@ -8,8 +8,6 @@ import * as path from 'path'
 
 const { CHECKME_MAILBOX, CHECKME_PASSWORD, LOCALE } = process.env
 
-console.log('!!!', CHECKME_MAILBOX, CHECKME_PASSWORD)
-
 const app = express()
 const port = process.env.PORT || 8080 // default port to listen
 
