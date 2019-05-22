@@ -1,13 +1,14 @@
-import * as dotenv from 'dotenv-flow'
+require('dotenv-flow').config()
 import express from 'express'
-import mongoose, { Schema } from 'mongoose'
 
+import Email from 'email-templates'
 import imaps from 'imap-simple'
 import * as _ from 'lodash'
+import * as path from 'path'
 
-import { BadooModel } from './models'
+const { CHECKME_MAILBOX, CHECKME_PASSWORD, LOCALE } = process.env
 
-dotenv.config()
+console.log('!!!', CHECKME_MAILBOX, CHECKME_PASSWORD)
 
 const app = express()
 const port = process.env.PORT || 8080 // default port to listen
@@ -15,62 +16,70 @@ const port = process.env.PORT || 8080 // default port to listen
 import nodemailer from 'nodemailer'
 import { pugEngine } from 'nodemailer-pug-engine'
 
-mailer.use(
-    'compile',
-    pugEngine({
-        templateDir: __dirname + '/templates',
-        pretty: true
-    })
-)
+const transport =
+    process.env.NODE_ENV === 'production'
+        ? {
+              service: 'gmail',
+              auth: {
+                  user: CHECKME_MAILBOX,
+                  pass: CHECKME_PASSWORD
+              }
+          }
+        : {
+              jsonTransport: true
+          }
 
-mongoose
-    .connect(process.env.MONGODB_URL || '', { useNewUrlParser: true })
-    .then(() => console.log(`Connected to ${process.env.MONGODB_URL}`))
-    .catch((err: any) => {
-        console.error(err)
+const email = new Email({
+    message: {
+        from: CHECKME_MAILBOX || 'checkme@softsky.company'
+    },
+    juice: true,
+    juiceResources: {
+        preserveImportant: true,
+        webResources: {
+            relativeTo: path.resolve('templates'),
+            images: true // <--- set this as `true`
+        }
+    },
+    transport,
+    views: { root: 'templates' }
+})
+
+email
+    .send({
+        template: 'test',
+        message: {
+            to: 'a.gutsal+temp@softsky.company'
+        },
+        locals: {
+            email: 'a.gutsal@softsky.company',
+            breached_count: 387,
+            transactionId: 'd7f6037e1b1146dabab8f24fa98e7d43',
+            reportDate: new Date().toLocaleDateString(LOCALE)
+        }
     })
+    .then((res: any) => {
+        console.log('res.originalMessage', res.originalMessage)
+    })
+    .catch(console.error)
 
 const mailto = (mobj: any) =>
     `mailto:${mobj.to}?cc=${mobj.cc}&subject=${mobj.subject}&body=${mobj.body}`
+// define a route handler for mailto:cc=checkme
+app.get('/cc', (req: any, res: any) => {
+    res.redirect(mailto({ cc: CHECKME_MAILBOX }))
+})
 
-// define a route handler for the default home page
-app.get('/:num@:template', (req: any, res: any) => {
-    const template = req.params.template
-    const num = req.params.num
-    console.log(template)
-    // lookng up for next recipiets to deliver message to
-    return BadooModel.find(
-        { num1: num, email: /\.ru$/, status: { $exists: false } },
-        { _id: 1, email: 1, status: 1 }
+app.get('/*.svg', (req: any, res: any) => {
+    res.contentType('image/svg+xml').send(
+        '<svg width="900" height="500" aria-label="A chart." style="overflow: hidden;"><defs id="_ABSTRACT_RENDERER_ID_0"></defs><rect x="0" y="0" width="900" height="500" stroke="none" stroke-width="0" fill="#ffffff"></rect><g><text text-anchor="start" x="161" y="70.9" font-family="Arial" font-size="14" font-weight="bold" stroke="none" stroke-width="0" fill="#000000">My Daily Activities</text><rect x="161" y="59" width="579" height="14" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect></g><g><rect x="542" y="96" width="198" height="106" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g column-id="Work"><rect x="542" y="96" width="198" height="14" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="561" y="107.9" font-family="Arial" font-size="14" stroke="none" stroke-width="0" fill="#222222">Work</text></g><circle cx="549" cy="103" r="7" stroke="none" stroke-width="0" fill="#3366cc"></circle></g><g column-id="Eat"><rect x="542" y="119" width="198" height="14" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="561" y="130.9" font-family="Arial" font-size="14" stroke="none" stroke-width="0" fill="#222222">Eat</text></g><circle cx="549" cy="126" r="7" stroke="none" stroke-width="0" fill="#dc3912"></circle></g><g column-id="Commute"><rect x="542" y="142" width="198" height="14" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="561" y="153.9" font-family="Arial" font-size="14" stroke="none" stroke-width="0" fill="#222222">Commute</text></g><circle cx="549" cy="149" r="7" stroke="none" stroke-width="0" fill="#ff9900"></circle></g><g column-id="Watch TV"><rect x="542" y="165" width="198" height="14" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="561" y="176.9" font-family="Arial" font-size="14" stroke="none" stroke-width="0" fill="#222222">Watch TV</text></g><circle cx="549" cy="172" r="7" stroke="none" stroke-width="0" fill="#109618"></circle></g><g column-id="Sleep"><rect x="542" y="188" width="198" height="14" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="561" y="199.9" font-family="Arial" font-size="14" stroke="none" stroke-width="0" fill="#222222">Sleep</text></g><circle cx="549" cy="195" r="7" stroke="none" stroke-width="0" fill="#990099"></circle></g></g><g><path d="M340,251L340,97A154,154,0,0,1,379.8581329457882,399.75257724851656L340,251A0,0,0,0,0,340,251" stroke="#ffffff" stroke-width="1" fill="#3366cc"></path><text text-anchor="start" x="438.1707648577682" y="240.34252366466197" font-family="Arial" font-size="14" stroke="none" stroke-width="0" fill="#ffffff">45.8%</text></g><g><path d="M340,251L191.2474227514835,290.8581329457882A154,154,0,0,1,340,97L340,251A0,0,0,0,0,340,251" stroke="#ffffff" stroke-width="1" fill="#990099"></path><text text-anchor="start" x="225.02377088259124" y="183.02217618173913" font-family="Arial" font-size="14" stroke="none" stroke-width="0" fill="#ffffff">29.2%</text></g><g><path d="M340,251L231.1055556972717,359.89444430272835A154,154,0,0,1,191.2474227514835,290.8581329457882L340,251A0,0,0,0,0,340,251" stroke="#ffffff" stroke-width="1" fill="#109618"></path><text text-anchor="start" x="217.79914743775038" y="317.21509081498266" font-family="Arial" font-size="14" stroke="none" stroke-width="0" fill="#ffffff">8.3%</text></g><g><path d="M340,251L300.1418670542118,399.75257724851656A154,154,0,0,1,231.1055556972717,359.89444430272835L340,251A0,0,0,0,0,340,251" stroke="#ffffff" stroke-width="1" fill="#ff9900"></path><text text-anchor="start" x="261.2228787133989" y="364.63316362130666" font-family="Arial" font-size="14" stroke="none" stroke-width="0" fill="#ffffff">8.3%</text></g><g><path d="M340,251L379.8581329457882,399.75257724851656A154,154,0,0,1,300.1418670542118,399.75257724851656L340,251A0,0,0,0,0,340,251" stroke="#ffffff" stroke-width="1" fill="#dc3912"></path><text text-anchor="start" x="324" y="387.9827092057096" font-family="Arial" font-size="14" stroke="none" stroke-width="0" fill="#ffffff">8.3%</text></g><g></g></svg>'
     )
-        .limit(parseInt(process.env.RECIPIENT_LIMIT || '50', 10))
-        .then((recipients: any[]) => {
-            // setting status to `false`
-            const emails = recipients.map((it: any) => it.email)
-            console.log(
-                `Generated email for: ${recipients.map((it: any) => it.email)}`
-            )
-            res.redirect(
-                mailto(
-                    require(`../templates/${template}.js`)({
-                        num,
-                        template,
-                        to: process.env.CHECKME_MAILBOX,
-                        cc: recipients.map((it: any) => it.email).join(',')
-                    })
-                )
-            )
-        })
-        .catch((err: any) => {
-            console.log(err)
-            res.status(500).send(err)
-        })
 })
 
 const config = {
     imap: {
-        user: 'checkme@softsky.company',
-        password: 'Xt12Ujnj12',
+        user: CHECKME_MAILBOX || 'checkme@softsky.company',
+        password: CHECKME_PASSWORD || '',
         host: 'imap.gmail.com',
         port: 993,
         tls: true,
@@ -84,43 +93,12 @@ const config = {
 
 const searchCriteria = ['UNSEEN']
 
+const searchAndFetchPromise = async (conn: any) => true
+
 const fetchOptions = {
     bodies: ['HEADER.FIELDS (FROM TO CC BCC DATE)'],
     markSeen: true
 }
-
-const searchAndFetchPromise = async (conn: any) =>
-    conn
-        .search(searchCriteria, fetchOptions)
-        .then((results: any) =>
-            _.flatten(
-                results.map((it: any) => it.parts.map((that: any) => that.body))
-            )
-        )
-        .then((bodies: any[]) => {
-            const now = Date.now()
-            let recipients: string[] = bodies.map((it: any) =>
-                it.to
-                    .concat(it.cc, it.bcc)
-                    .map((to: any) =>
-                        to
-                            .split(/,/)
-                            .map((i: string) =>
-                                i.match(
-                                    /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi
-                                )
-                            )
-                    )
-            )
-
-            recipients = _.pull(_.uniq(_.flattenDepth(recipients, 3)), process
-                .env.CHECKME_MAILBOX as string)
-
-            return BadooModel.updateMany(
-                { email: { $in: recipients } },
-                { $set: { status: { updated: now } } }
-            ).then(() => console.log('Updated recipients:', recipients))
-        })
 
 // start the Express server
 app.listen(port, () => {
