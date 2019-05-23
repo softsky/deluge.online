@@ -5,13 +5,14 @@
     "main": "dist/index.js",
     "license": "MIT",
     "scripts": {
-        "start": "./node_modules/.bin/ts-node -r tsconfig-paths/register src/index.ts",
-        "build": "./node_modules/.bin/webpack",
-        "lint": "./node_modules/.bin/tslint src/**/*.ts",
-        "test": "./node_modules/.bin/jest --colors --watchAll",
-        "test:ci": "./node_modules/.bin/cross-env CI=true jest --colors",
-        "format": "./node_modules/.bin/prettier --write \"src/**/*\"",
-        "conflict-rules": "./node_modules/.bin/tslint-config-prettier-check ./tslint.json"
+        "start": "node dist/index.js",
+        "dev": "ts-node -r tsconfig-paths/register src/index.ts",
+        "build": "webpack",
+        "lint": "tslint src/**/*.ts",
+        "test": "jest --colors --watchAll",
+        "test:ci": "cross-env CI=true jest --colors",
+        "format": "prettier --write \"src/**/*\"",
+        "conflict-rules": "tslint-config-prettier-check ./tslint.json"
     },
     "jest": {
         "globals": {
