@@ -1,6 +1,6 @@
 {
     "name": "deluge-online",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Typescript Project",
     "main": "dist/index.js",
     "license": "MIT",
