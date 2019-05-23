@@ -5,6 +5,7 @@ import Email from 'email-templates'
 import imaps from 'imap-simple'
 import * as _ from 'lodash'
 import * as path from 'path'
+import * as request from 'request-promise'
 
 const { CHECKME_MAILBOX, CHECKME_PASSWORD, LOCALE } = process.env
 
@@ -40,20 +41,73 @@ const email = new Email({
         }
     },
     transport,
+    //    preview: true,
     views: { root: 'templates' }
 })
 
+const options = {
+    uri:
+        'https://haveibeenpwned.com/api/v2/breachedaccount/gutsal.arsen@gmail.com',
+    headers: {
+        'User-Agent': 'Request-Promise'
+    },
+    json: true // Automatically parses the JSON string in the response
+}
+
+request
+    .get(options)
+    .then((pwned: any) => {
+        console.log('User has %d repos', pwned)
+
+        if (pwned.statusCode === 200) {
+            email
+                .send({
+                    template: 'account-report',
+                    message: {
+                        to: 'a.gutsal+temp@softsky.company'
+                    },
+                    locals: {
+                        email: 'a.gutsal@softsky.company',
+                        checkme_email: CHECKME_MAILBOX,
+                        breached_count: 387,
+                        compromised_count: 7,
+                        transactionId: 'd7f6037e1b1146dabab8f24fa98e7d43',
+                        reportDate: new Date().toLocaleDateString(LOCALE),
+                        name: {
+                            full: 'John Jr. Doe',
+                            first: 'John',
+                            last: 'Doe'
+                        }
+                    }
+                })
+                .then((res: any) => {
+                    console.log('res.originalMessage', res.originalMessage)
+                })
+                .catch(console.error)
+        }
+    })
+    .catch((err: any) => {
+        console.error(err)
+    })
+
 email
     .send({
-        template: 'account.report',
+        template: 'account-report',
         message: {
             to: 'a.gutsal+temp@softsky.company'
         },
         locals: {
             email: 'a.gutsal@softsky.company',
+            checkme_email: CHECKME_MAILBOX,
             breached_count: 387,
+            compromised_count: 7,
             transactionId: 'd7f6037e1b1146dabab8f24fa98e7d43',
-            reportDate: new Date().toLocaleDateString(LOCALE)
+            reportDate: new Date().toLocaleDateString(LOCALE),
+            name: {
+                full: 'John Jr. Doe',
+                first: 'John',
+                last: 'Doe'
+            }
         }
     })
     .then((res: any) => {
