@@ -114,7 +114,7 @@ mixin super-heading
 		td(style="font-size: 0; background-color: #36424F; text-align: center; padding: 16px 0")
 			+ie-open(({cell: 300}))
 			div(style="display: inline-block;")
-				table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="font-weight: bold; text-align: left; font-size: 19px; color: white; padding: 7px 20px; font-family: Montserrat, Arial, sans-serif; line-height: 1.4") SECURITY REPORT<br/> ACCOUNT BREACHED REPORT
+				table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="font-weight: bold; text-align: left; font-size: 19px; color: white; padding: 7px 20px; font-family: Montserrat, Arial, sans-serif; line-height: 1.4") ACCOUNT SECURITY<br/> REPORT<br/>
 			+ie-col(({cell: 300}))
 			div(style="display: inline-block;")
 				table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="text-align: right; font-size: 14px; color: white; padding: 7px 20px; font-family: Montserrat, Arial, sans-serif; line-height: 1.7") Transaction ID: #{transactionId}<br>Date: #{reportDate}
@@ -128,7 +128,12 @@ mixin intro-block
 		td(style="font-size: 0; background-color: white; text-align: center; padding: 15px 0 35px")
 			+ie-open(({cell: 300}))
 			div(style="display: inline-block; vertical-align: top")
-				table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif") <p>Hi John</p><p>Thank you for ordering from us. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ut odio ex. Nulla vehicula ligula eros, vitae mattis est eleifend non.</p><p>Quisque luctus sollicitudin nisl et lacinia. Suspendisse potenti. Sed sodales nunc id ante finibus luctus. Maecenas vel porta leo. Mauris pulvinar rhoncus turpis, condimentum semper urna vulputate ut.</p>
+				table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
+					p Hi #{name.full}
+					p We've checked against #[strong #{breached_count}] databases if #[strong #{email}] account has been compromised in any data breach. Currently we have found it in #{compromised_count} breached records.
+					p
+					p Although we're still in beta, you can also get DETAILED REPORT if you purchase yearly subscription to our service with 25% discount (limited time offer). Get notified when future pwnage occurs and your account is compromised for as low as USD $75/yr.
+					p Please, find the summary report below.
 			+ie-col(({cell: 298}))
 			div(style="display: inline-block; vertical-align: top")
 				table(cellspacing="0" cellpadding="0" bor der="0" width="298")
@@ -138,6 +143,9 @@ mixin intro-block
 							tr: td(style="padding-top: 15px;").
 								  <!--[if mso]>
 								  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://www.runwaysale.co.za/main/sales/order/history/" style="height:45px;v-text-anchor:middle;width:260px;" stroke="f" fillcolor="#F05032">
+									p Although this is a short summary you can request detailed report by helping us to test our beta service. Just let 5 of your frieds know about us by sending him that email.
+									p #[strong NOTE!] Please do not remove #{checkme_email} address from CC field of that email. By clicking button below you agree to let us analyze the data you provide.;
+
 									<w:anchorlock/>
 									<center>
 								  <![endif]-->
