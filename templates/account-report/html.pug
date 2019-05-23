@@ -130,7 +130,7 @@ mixin intro-block
 			div(style="display: inline-block; vertical-align: top")
 				table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
 					p Hi #{name.full}
-					p We've checked against #[strong #{breached_count}] databases if #[strong #{email}] account has been compromised in any data breach. Currently we have found it in #{compromised_count} breached records.
+					p We've checked against #[strong #{breaches.length}] databases if #[strong #{email}] account has been compromised in any data breach. Currently we have found it in #{breaches.length} breached records.
 					p
 					p Although we're still in beta, you can also get DETAILED REPORT if you purchase yearly subscription to our service with 25% discount (limited time offer). Get notified when future pwnage occurs and your account is compromised for as low as USD $75/yr.
 					p Please, find the summary report below.
