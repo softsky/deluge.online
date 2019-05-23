@@ -18,4 +18,9 @@ describe('index.ts', () => {
             'mailto:a@a.com?cc=checkme@a.com'
         )
     })
+
+    it('report', () => {
+        const breaches = require('./__resources/breaches.json')
+        expect(breaches.length).to.equal(8)
+    })
 })
