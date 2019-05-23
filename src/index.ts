@@ -7,7 +7,12 @@ import * as _ from 'lodash'
 import * as path from 'path'
 import * as request from 'request-promise'
 
-const { CHECKME_MAILBOX, CHECKME_PASSWORD, LOCALE } = process.env
+const {
+    CHECKME_MAILBOX,
+    CHECKME_PASSWORD,
+    CHECKME_EMAIL_ALIAS,
+    LOCALE
+} = process.env
 
 const app = express()
 const port = process.env.PORT || 8080 // default port to listen
@@ -32,7 +37,7 @@ const email = new Email({
     message: {
         from: CHECKME_MAILBOX || 'checkme@softsky.company'
     },
-    juice: true,
+    juice: false,
     juiceResources: {
         preserveImportant: true,
         webResources: {
@@ -41,7 +46,7 @@ const email = new Email({
         }
     },
     transport,
-    //    preview: true,
+    // preview: true,
     views: { root: 'templates' }
 })
 
@@ -79,7 +84,9 @@ Promise.resolve(B)
                         first: 'John',
                         last: 'Doe'
                     },
-                    breaches
+                    breaches,
+                    friend_count: 5,
+                    mailto_friends: mailto({ cc: CHECKME_EMAIL_ALIAS })
                 }
             })
             .then((res: any) => {
