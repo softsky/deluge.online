@@ -90,31 +90,6 @@ request
         console.error(err)
     })
 
-email
-    .send({
-        template: 'account-report',
-        message: {
-            to: 'a.gutsal+temp@softsky.company'
-        },
-        locals: {
-            email: 'a.gutsal@softsky.company',
-            checkme_email: CHECKME_MAILBOX,
-            breached_count: 387,
-            compromised_count: 7,
-            transactionId: 'd7f6037e1b1146dabab8f24fa98e7d43',
-            reportDate: new Date().toLocaleDateString(LOCALE),
-            name: {
-                full: 'John Jr. Doe',
-                first: 'John',
-                last: 'Doe'
-            }
-        }
-    })
-    .then((res: any) => {
-        console.log('res.originalMessage', res.originalMessage)
-    })
-    .catch(console.error)
-
 const mailto = (mobj: any) =>
     `mailto:${mobj.to}?cc=${mobj.cc}&subject=${mobj.subject}&body=${mobj.body}`
 // define a route handler for mailto:cc=checkme
