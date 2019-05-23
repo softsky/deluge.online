@@ -9,9 +9,9 @@
         "build": "./node_modules/.bin/webpack",
         "lint": "./node_modules/.bin/tslint src/**/*.ts",
         "test": "./node_modules/.bin/jest --colors --watchAll",
-        "test:ci": "cross-env CI=true jest --colors",
-        "format": "prettier --write \"src/**/*\"",
-        "conflict-rules": "tslint-config-prettier-check ./tslint.json"
+        "test:ci": "./node_modules/.bin/cross-env CI=true jest --colors",
+        "format": "./node_modules/.bin/prettier --write \"src/**/*\"",
+        "conflict-rules": "./node_modules/.bin/tslint-config-prettier-check ./tslint.json"
     },
     "jest": {
         "globals": {
