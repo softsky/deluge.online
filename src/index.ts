@@ -90,8 +90,13 @@ request
         console.error(err)
     })
 
-const mailto = (mobj: any) =>
-    `mailto:${mobj.to}?cc=${mobj.cc}&subject=${mobj.subject}&body=${mobj.body}`
+export const mailto = (mobj: any) =>
+    (mobj.to ? `mailto:${mobj.to}?` : 'mailto:?') +
+    ['cc', 'bcc', 'subject', 'body']
+        .filter(it => _.isEmpty(mobj[it]) === false)
+        .map(it => `${it}=${mobj[it]}`)
+        .join('&')
+
 // define a route handler for mailto:cc=checkme
 app.get('/cc', (req: any, res: any) => {
     res.redirect(mailto({ cc: CHECKME_MAILBOX }))
