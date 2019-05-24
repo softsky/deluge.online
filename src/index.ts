@@ -152,7 +152,7 @@ app.get('/report/:emailToCheck', (req: any, res: any) => {
 })
 
 const md = new MarkdownIt()
-const tosMD = fs.readFileSync(path.join(__dirname, './tos.md')).toString()
+const tosMD = fs.readFileSync('src/tos.md').toString()
 
 app.get('/tos', (req: any, res: any) => {
     res.status(200).send(md.render(tosMD))
