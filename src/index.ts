@@ -63,6 +63,7 @@ const options = {
 }
 
 const B = require('./__resources/breaches.json')
+const BREACHES = require('../breaches.json')
 
 request
     .get(options)
@@ -83,7 +84,7 @@ request
                     checkme_email: CHECKME_EMAIL_ALIAS,
                     support_email: SUPPORT_EMAIL,
                     support_phone: SUPPORT_PHONE,
-                    breached_count: 387,
+                    breached_count: BREACHES.length,
                     transactionId: 'd7f6037e1b1146dabab8f24fa98e7d43',
                     reportDate: new Date().toLocaleDateString(LOCALE),
                     name: {
