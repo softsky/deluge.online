@@ -22,9 +22,6 @@ const {
 const app = express()
 const port = process.env.PORT || 8080 // default port to listen
 
-import nodemailer from 'nodemailer'
-import { pugEngine } from 'nodemailer-pug-engine'
-
 const transport =
     process.env.NODE_ENV === 'production'
         ? {
