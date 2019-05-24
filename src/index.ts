@@ -77,6 +77,8 @@ const getRenderOptions = (email: string, breaches: any[]) => {
             cc: CHECKME_EMAIL_ALIAS,
             subject: '👆 Have you checked your account already?'
         }),
+        payment_request_url:
+            'https://docs.google.com/forms/d/1xk2wdx1yZ4V2DsbeleCKkr11QnORoq8d3yQZhR_267M/',
         tos_url: 'https://deluge-online.herokuapp.com/tos',
         breaches
     }
