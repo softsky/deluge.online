@@ -65,9 +65,10 @@ const B = require('./__resources/breaches.json')
 
 request
     .get(options)
-    .then(resp => resp.data)
+    .then(resp => resp)
     // Promise.resolve(B)
     .then((breaches: any) => {
+        console.log(breaches)
         console.log('User has %d breaches', breaches.length)
         email
             .send({
