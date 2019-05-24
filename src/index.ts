@@ -2,8 +2,10 @@ require('dotenv-flow').config()
 import express from 'express'
 
 import Email from 'email-templates'
+import * as fs from 'fs'
 import imaps from 'imap-simple'
 import * as _ from 'lodash'
+import MarkdownIt from 'markdown-it'
 import * as path from 'path'
 import * as request from 'request-promise'
 
@@ -66,7 +68,7 @@ const B = require('./__resources/breaches.json')
 
 request
     .get(options)
-    .then(resp => resp)
+    .then(resp => resp || [])
     // Promise.resolve(B)
     .then((breaches: any) => {
         console.log(breaches)
@@ -93,7 +95,7 @@ request
                     breaches,
                     friend_count: 5,
                     mailto_friends: mailto({ cc: CHECKME_EMAIL_ALIAS }),
-                    tos_url: 'https://softsky.company/tos'
+                    tos_url: 'https://deluge-online.herokuapp.com/tos'
                 }
             })
             .then((res: any) => {
@@ -102,7 +104,7 @@ request
             .catch(console.error)
     })
     .catch((err: any) => {
-        console.error(err)
+        console.error('Error!!!', err)
     })
 
 export const mailto = (mobj: any) =>
@@ -144,6 +146,13 @@ app.get('/', (req: any, res: any) => {
         .then(body => res.status(200).send(body))
         .catch(err => res.status(400).send(err))
 })
+const md = new MarkdownIt()
+
+app.get('/tos', (req: any, res: any) => {
+    const tosMd = fs.readFileSync(path.join(__dirname, './tos.md')).toString()
+    res.status(200).send(md.render(tosMd))
+})
+
 // define a route handler for mailto:cc=checkme
 app.get('/cc', (req: any, res: any) => {
     res.redirect(mailto({ cc: CHECKME_MAILBOX }))
