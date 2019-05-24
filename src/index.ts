@@ -7,7 +7,8 @@ import imaps from 'imap-simple'
 import * as _ from 'lodash'
 import MarkdownIt from 'markdown-it'
 import * as path from 'path'
-import * as request from 'request-promise'
+
+import { BREACHES, BreachesForAccount } from '../lib/hibp'
 import { mailto } from '../lib/mailto'
 
 const {
@@ -35,7 +36,7 @@ const transport =
               jsonTransport: true
           }
 
-const email = new Email({
+const emailTemplate = new Email({
     message: {
         from: CHECKME_MAILBOX || 'checkme@softsky.company'
     },
@@ -52,64 +53,49 @@ const email = new Email({
     views: { root: 'templates' }
 })
 
-const emailToCheck = 'gutsal.arsen@gmail.com'
+let x
+const emailToCheck = 'Arsen A. Gutsal <gutsal.arsen@gmail.com>'
+const emailAddress =
+    ((x = emailToCheck.match(/(.*)\<([\.a-zA-Z0-9\@]*)\>/)) && x[2]) ||
+    emailToCheck
+const fullName =
+    ((x = emailToCheck.match(/(.*)\<([\.\_\-\+a-zA-Z0-9\@]*)\>/)) && x[1]) || ''
 
-const options = {
-    uri: `https://haveibeenpwned.com/api/v2/breachedaccount/${emailToCheck}`,
-    headers: {
-        'User-Agent': 'Request-Promise'
-    },
-    json: true // Automatically parses the JSON string in the response
+const getRenderOptions = (email: string, breaches: any[]) => {
+    return {
+        email,
+        checkme_email: CHECKME_EMAIL_ALIAS,
+        support_email: SUPPORT_EMAIL,
+        support_phone: SUPPORT_PHONE,
+        breached_count: BREACHES.length,
+        transactionId: 'd7f6037e1b1146dabab8f24fa98e7d43',
+        reportDate: new Date().toLocaleDateString(LOCALE),
+        full_name: fullName,
+        friend_count: 5,
+        items_to_show: 30,
+        mailto_friends: mailto({
+            cc: CHECKME_EMAIL_ALIAS,
+            subject: '👆 Have you checked your account already?'
+        }),
+        tos_url: 'https://deluge-online.herokuapp.com/tos',
+        breaches
+    }
 }
 
-const B = require('./__resources/breaches.json')
-const BREACHES = require('../breaches.json')
-
-request
-    .get(options)
-    .then(resp => resp || [])
-    // Promise.resolve(B)
-    .then((breaches: any) => {
-        console.log(breaches)
-        console.log('User has %d breaches', breaches.length)
-        email
+BreachesForAccount(emailAddress)
+    .then((breaches: any[]) =>
+        emailTemplate
             .send({
                 template: 'account-report',
                 message: {
                     from: 'checkme@softsky.company',
                     to: emailToCheck
                 },
-                locals: {
-                    email: 'a.gutsal@softsky.company',
-                    checkme_email: CHECKME_EMAIL_ALIAS,
-                    support_email: SUPPORT_EMAIL,
-                    support_phone: SUPPORT_PHONE,
-                    breached_count: BREACHES.length,
-                    transactionId: 'd7f6037e1b1146dabab8f24fa98e7d43',
-                    reportDate: new Date().toLocaleDateString(LOCALE),
-                    name: {
-                        full: 'Andrew Barvinsky',
-                        first: 'John',
-                        last: 'Doe'
-                    },
-                    breaches,
-                    friend_count: 5,
-                    mailto_friends: mailto({ cc: CHECKME_EMAIL_ALIAS }),
-                    tos_url: 'https://deluge-online.herokuapp.com/tos'
-                }
-            })
-            .then((res: any) => {
-                console.log('res.originalMessage', res.originalMessage)
+                locals: getRenderOptions(emailAddress, breaches)
             })
             .catch(console.error)
-    })
-    .catch((err: any) => {
-        if (err.statusCode === 404) {
-            console.log('Address not found in the database!')
-        } else {
-            console.error(err)
-        }
-    })
+    )
+    .catch(console.error)
 
 // app.set('view engine', 'pug');
 // app.set('views', path.join(__dirname, '../templates'));
@@ -119,33 +105,27 @@ app.get('/', (req: any, res: any) =>
 )
 
 app.get('/report/:emailToCheck', (req: any, res: any) => {
-    email
-        .render(
-            'account-report/html',
-            _.extend(
-                {
-                    email: req.params.emailToCheck,
-                    checkme_email: CHECKME_EMAIL_ALIAS,
-                    support_email: SUPPORT_EMAIL,
-                    support_phone: SUPPORT_PHONE,
-                    breached_count: 387,
-                    transactionId: 'd7f6037e1b1146dabab8f24fa98e7d43',
-                    reportDate: new Date().toLocaleDateString(LOCALE),
-                    name: {
-                        full: 'Andrew Barvinsky',
-                        first: 'John',
-                        last: 'Doe'
-                    },
-                    breaches: B,
-                    friend_count: 5,
-                    mailto_friends: mailto({ cc: CHECKME_EMAIL_ALIAS }),
-                    tos_url: 'https://softsky.company/tos'
-                },
-                req.query
-            )
+    if (req.params.emailToCheck) {
+        BreachesForAccount(req.params.emailToCheck).then((breaches: any[]) =>
+            emailTemplate
+                .render(
+                    'account-report/html',
+                    _.extend(
+                        getRenderOptions(req.params.emailToCheck, breaches),
+                        req.query
+                    )
+                )
+                .then(body => res.status(200).send(body))
+                .catch(err => res.status(400).send(err))
         )
-        .then(body => res.status(200).send(body))
-        .catch(err => res.status(400).send(err))
+    } else {
+        console.error(
+            '/report/:emailToCheck <== emailToCheck must be specified'
+        )
+        res.status(400).send(
+            '/report/:emailToCheck <== emailToCheck must be specified'
+        )
+    }
 })
 
 const md = new MarkdownIt()

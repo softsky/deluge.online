@@ -6,14 +6,20 @@ const _ = require('lodash')
 let BREACHES = require('../breaches.json')
 BREACHES = BREACHES.map((it: any) =>
     _.extend(it, {
-        mailto_remove: mailto({
-            to: 'support@' + it.Domain,
-            subject: encodeURIComponent('Please, remove my account permanently')
-        })
+        mailto_remove: _.isEmpty(it.Domain)
+            ? undefined
+            : mailto({
+                  to: 'support@' + it.Domain,
+                  subject: encodeURIComponent(
+                      'Please, remove my account permanently'
+                  )
+              })
     })
 ) // making mailto for every record
 
-const BreachesForAccount = (emailToCheck: string) =>
+const BreachesForAccount: (arg: string) => Promise<any[]> = (
+    emailToCheck: string
+) =>
     new Promise((resolve, reject) => {
         const options = {
             uri: `https://haveibeenpwned.com/api/v2/breachedaccount/${emailToCheck}`,
@@ -25,9 +31,9 @@ const BreachesForAccount = (emailToCheck: string) =>
 
         request
             .get(options)
-            .then((breaches: any) => {
+            .then((breaches: any[]) => {
                 let x
-                const decoratedBreaches = breaches.map((it: any) =>
+                const decoratedBreaches: any[] = breaches.map((it: any) =>
                     _.extend(it, {
                         mailto_remove:
                             ((x = _.find(BREACHES, { Name: it.Name })) &&

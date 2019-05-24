@@ -129,8 +129,8 @@ mixin intro-block
 			+ie-open(({cell: 300}))
 			div(style="display: inline-block; vertical-align: top")
 				table(cellspacing="0" cellpadding="0" border="0" width="100%"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
-					p Hi #{name.full}
-					p Your email (#[strong #{email}]) was found in #[strong #{breaches.length}] out of #[strong #{breached_count}] databases of breached accounts. Please see the details below.  
+					p Hi #{full_name}
+					p Your email #[strong #{email}] was found in #[strong #{breaches.length}] out of #[strong #{breached_count}] databases of breached accounts. Please see the details below.  
 
 //- Button
 mixin button(caption, href, disabled)
@@ -196,8 +196,10 @@ mixin item-order(breach)
 					tr: td(class="u-textFallback" style="font-size: 14px; padding: 15px 40px 0 0; color: #666666; text-align: right; font-size: 14px; font-family: Montserrat, Arial, sans-serif; line-height: 1.4") <b>Data classes</b>
 					each cl in breach.DataClasses
 						tr: td(class="u-textFallback" style="font-size: 14px; padding: 0px 40px 0 0; color: #666666; text-align: right; font-size: 14px; font-family: Montserrat, Arial, sans-serif; line-height: 1.4") #{cl}
-				+button("Remove account", "https://remove.com")
-				+button("Change password", "https://remove.com")
+				if(breach.mailto_remove)
+					+button("Remove account", breach.mailto_remove)
+				if(breach.Domain && (breach.Domain !== ""))
+					+button("Change password", "https://" + breach.Domain)
 			+ie-close
 //- Item Order
 //--------------------------------
@@ -338,8 +340,8 @@ html(xmlns="http://www.w3.org/1999/xhtml", lang="en", xml:lang="en")
 							+small-header
 							// +info-block
 							each breach,idx in breaches
-								if(idx <= 3)
-									+item-order(breach, idx >= 3)
+								if(idx < items_to_show)
+									+item-order(breach)
 								else
 									+item-blur
 							//+order-total
