@@ -52,7 +52,7 @@ const email = new Email({
     views: { root: 'templates' }
 })
 
-const emailToCheck = 'a.gutsal@softsky.com.ua'
+const emailToCheck = 'a.gutsal@softsky.company'
 
 const options = {
     uri: `https://haveibeenpwned.com/api/v2/breachedaccount/${emailToCheck}`,
