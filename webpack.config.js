@@ -30,7 +30,7 @@ module.exports = {
         rules: [
             {
                 test: /\.(ts|tsx)$/,
-                include: appSrc,
+                include: [appSrc, resolveApp('lib')],
                 use: [
                     {
                         loader: require.resolve('ts-loader'),
