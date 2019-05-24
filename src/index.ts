@@ -11,6 +11,8 @@ const {
     CHECKME_MAILBOX,
     CHECKME_PASSWORD,
     CHECKME_EMAIL_ALIAS,
+    SUPPORT_EMAIL,
+    SUPPORT_PHONE,
     LOCALE
 } = process.env
 
@@ -61,32 +63,35 @@ const options = {
 
 const B = require('./__resources/breaches.json')
 
-// request
-//     .get(options)
-//     .then(resp => resp.data)
-Promise.resolve(B)
+request
+    .get(options)
+    .then(resp => resp.data)
+    // Promise.resolve(B)
     .then((breaches: any) => {
         console.log('User has %d breaches', breaches.length)
         email
             .send({
                 template: 'account-report',
                 message: {
-                    to: 'a.gutsal+temp@softsky.company'
+                    to: 'gutsal.arsen@gmail.com'
                 },
                 locals: {
                     email: 'a.gutsal@softsky.company',
-                    checkme_email: CHECKME_MAILBOX,
+                    checkme_email: CHECKME_EMAIL_ALIAS,
+                    support_email: SUPPORT_EMAIL,
+                    support_phone: SUPPORT_PHONE,
                     breached_count: 387,
                     transactionId: 'd7f6037e1b1146dabab8f24fa98e7d43',
                     reportDate: new Date().toLocaleDateString(LOCALE),
                     name: {
-                        full: 'John Jr. Doe',
+                        full: 'Andrew Barvinsky',
                         first: 'John',
                         last: 'Doe'
                     },
                     breaches,
                     friend_count: 5,
-                    mailto_friends: mailto({ cc: CHECKME_EMAIL_ALIAS })
+                    mailto_friends: mailto({ cc: CHECKME_EMAIL_ALIAS }),
+                    tos_url: 'https://softsky.company/tos'
                 }
             })
             .then((res: any) => {

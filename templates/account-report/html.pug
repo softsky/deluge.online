@@ -278,13 +278,12 @@ mixin footer(props)
 				td(style="padding: 45px 0 35px;")
 					+ie-open({table: 600})
 					table(width="100%" align="center" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; background-color: #36424F; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #777777;")
-						tr: td(class="u-textFallback" width="100%" style="font-size: 13px; font-family: Montserrat, Arial, Helvetica, sans-serif; color: white; text-align: center; padding: 8px 40px") For any queries email us at info@example.co.za or call us at 087 943 1234
-						tr: td(class="u-textFallback" width="100%" style="font-size: 13px; font-family: Montserrat, Arial, Helvetica, sans-serif; color: white; text-align: center; padding: 8px 40px 16px;") Unit 6, Organisation Building, 12 Example Road, Cape Town, 7925
+						tr: td(class="u-textFallback" width="100%" style="font-size: 13px; font-family: Montserrat, Arial, Helvetica, sans-serif; color: white; text-align: center; padding: 8px 40px") For any queries email us at #{support_email} or call us at #{support_phone}
+						tr: td(class="u-textFallback" width="100%" style="font-size: 13px; font-family: Montserrat, Arial, Helvetica, sans-serif; color: white; text-align: center; padding: 8px 40px 16px;") Schlyahtynecka 3, Gai Schevchenkivsky, Ternopil, 47710, Ukraine
 					table(width="100%" align="center" cellspacing="0" cellpadding="0" border="0" style="width: 100%; max-width: 600px;")
 
 						tr: td(class="u-textFallback" width="100%" style="font-size: 13px; font-family: Montserrat, Arial, Helvetica, sans-serif; color: white; text-align: center; padding: 15px 20px 7px")
-							a(href="#" style="color: white; text-decoration: none; font-weight: 700") CALL TO ACTION
-							span &nbsp;| GET REWARDED
+							| #[strong WE ARE SOCIAL]
 						tr: td(style="padding: 16px 10px 8px")
 							table(align="center" cellspacing="0" cellpadding="0" border="0"): tr
 								td(style="padding: 0 7px;")
