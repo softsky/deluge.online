@@ -105,7 +105,7 @@ mixin header
 	tr
 		td(style="padding: 15px 20px")
 			a(href="https://www.softsky.company")
-				img(src="./images/SOFTSKY-logo-black.png" alt="Daily Digest Mailer" width="245" style="border-style: none; outline: none")
+				img(src="https://s3.us-west-1.amazonaws.com/softsky-resources/SOFTSKY-logo-black.png" alt="Daily Digest Mailer" width="245" style="border-style: none; outline: none")
 				
 //- Super Heading
 //--------------------------------
@@ -128,7 +128,7 @@ mixin intro-block
 		td(style="font-size: 0; background-color: white; text-align: center; padding: 15px 0 35px")
 			+ie-open(({cell: 300}))
 			div(style="display: inline-block; vertical-align: top")
-				table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
+				table(cellspacing="0" cellpadding="0" border="0" width="100%"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
 					p Hi #{name.full}
 					p Your email (#[strong #{email}]) was found in #{breaches.length} out of #[strong #{breached_count}] databases of breached accounts. Please see the details below.  
 
@@ -185,14 +185,14 @@ mixin item-order(breach, shouldBlur)
 	tr(style=(shouldBlur?"filter:blur(5px)":""))
 		td(style="border-top: 1px solid #EDEDED; background-color: white; font-size: 0; padding: 30px 0; text-align: center;")
 			+ie-open(({cell: 300}))
-			div(style="display: inline-block; vertical-align: top")
-				table(cellspacing="0" cellpadding="0" border="0" width="300" valign="top"): tr
-					td(style="padding: 0 20px;background-color:#EDEDED;text-align:center;width:150px")
-						img(src=breach.LogoPath width="82px" style="border: 0px solid #D4D4D4;" + (shouldBlur?";filter:blur(50px)":""))
+			div(style="display: block; vertical-align: top")
+				table(cellspacing="0" cellpadding="0" border="0" width="100%"): tr
+					td(style="padding: 20px;background-color:#EDEDED;text-align:center;width:150px")
+						img(src=breach.LogoPath width="82" style="border: 0px solid #D4D4D4;" + (shouldBlur?";filter:blur(50px)":""))
 					td(class="u-textFallback" style="line-height: 1.4; padding: 20px; color: #666666; text-align: left; font-size: 14px; font-family: Montserrat, Arial, sans-serif;") <b>#{breach.Title}</b><br>!{breach.Description}
 			+ie-col(({cell: 300}))
-			div(style="display: inline-block; vertical-align: top;align:right;text-align:right")
-				table(cellspacing="0" cellpadding="0" border="0" width="300")
+			div(style="display: block; vertical-align: top;align:right;text-align:right")
+				table(cellspacing="0" cellpadding="0" border="0" width="100%")
 					tr: td(class="u-textFallback" style="font-size: 14px; padding: 15px 40px 0 0; color: #666666; text-align: right; font-size: 14px; font-family: Montserrat, Arial, sans-serif; line-height: 1.4") <b>Data classes</b>
 					each cl in breach.DataClasses
 						tr: td(class="u-textFallback" style="font-size: 14px; padding: 0px 40px 0 0; color: #666666; text-align: right; font-size: 14px; font-family: Montserrat, Arial, sans-serif; line-height: 1.4") #{cl}
@@ -233,20 +233,16 @@ mixin thank-you
 //--------------------------------
 mixin call-to-action
 	tr
-		td(class="u-textFallback" style="padding: 20px; text-align: center; font-size: 15px; font-family: Montserrat, Arial, sans-serif; color: #666666") <span style="line-height: 1.4">
+		td(class="u-textFallback" style="padding: 20px; text-align: center; font-size: 15px; font-family: Montserrat, Arial, sans-serif; color: #666666") 
 				div(style="display: inline-block; vertical-align: top")
-					table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
+					table(cellspacing="0" cellpadding="0" border="0" width="100%"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
 						p Unlock blured items by <a href="#{mailto_friends}">sending email</a> to <strong>#{friend_count}</strong> of your friends telling them about our service.
 						p #[strong NOTE!] Please do not remove #{checkme_email} address from CC field of that email. By sending email to our service you're agreeing to our <a href=#{tos_url}>Terms of Service</a>
 						+button('NOTIFY FRIENDS', mailto_friends, false)
                                         
 	tr
-		td(class="u-textFallback" style="padding: 20px; text-align: center; font-size: 15px; font-family: Montserrat, Arial, sans-serif; color: #666666") <span style="line-height: 1.4"><b>Purchase yearly subscription</b><br> You can purchase yearly subscription with 25% discount (limited time offer). Once purchased, you will get DETAILED REPORT immediately.</span>
+		td(class="u-textFallback" style="padding: 20px; text-align: center; font-size: 15px; font-family: Montserrat, Arial, sans-serif; color: #666666") <b>Purchase yearly subscription</b><br> You can purchase yearly subscription with 25% discount (limited time offer). Once purchased, you will get DETAILED REPORT immediately.
 			+button('SUBSCRIBE ($75/yr)', mailto_friends, false)
-			p
-                                        
-
-
 //- Footer
 //--------------------------------
 mixin footer(props)
@@ -266,7 +262,7 @@ mixin footer(props)
 						tr: td(style="padding: 16px 10px 8px")
 							table(align="center" cellspacing="0" cellpadding="0" border="0"): tr
 								td(style="padding: 0 7px;")
-									a(href="https://twitter.com/"): img(src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/330390/mail-twitter-x2.png" alt="Twitter" style="height: 25px;" height="25")
+									a(href="https://twitter.com/"): img(src="https://s32-us-west-2.amazonaws.com/s.cdpn.io/330390/mail-twitter-x2.png" alt="Twitter" style="height: 25px;" height="25")
 								td(style="padding: 0 7px;")
 									a(href="https://www.facebook.com/"): img(src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/330390/mail-facebook-x2.png" alt="Facebook" style="height: 25px;" height="25")
 								td(style="padding: 0 7px;")
@@ -281,13 +277,15 @@ mixin footer(props)
 
 //- Pseudo Header
 //--------------------------------
-html
-	body
-		meta(content="telephone=no" name="format-detection")
+
+doctype html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"
+html(xmlns="http://www.w3.org/1999/xhtml", lang="en", xml:lang="en")
+	head
+		meta(content="telephone=no" name="format-detection") 
+		title SOFTSKY Account Audit report
 		link(href="https://fonts.googleapis.com/css?family=Montserrat:300,700" rel="stylesheet")
 		+style-tags
-		
-		
+	body
 		//- Entire Email Wrapper
 		//--------------------------------
 		table(cellspacing="0" cellpadding="0" border="0" width="100%")
