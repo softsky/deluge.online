@@ -8,6 +8,7 @@ import * as _ from 'lodash'
 import MarkdownIt from 'markdown-it'
 import * as path from 'path'
 import * as request from 'request-promise'
+import { mailto } from '../lib/mailto'
 
 const {
     CHECKME_MAILBOX,
@@ -54,7 +55,7 @@ const email = new Email({
     views: { root: 'templates' }
 })
 
-const emailToCheck = 'a.gutsal@softsky.company'
+const emailToCheck = 'gutsal.arsen@gmail.com'
 
 const options = {
     uri: `https://haveibeenpwned.com/api/v2/breachedaccount/${emailToCheck}`,
@@ -77,6 +78,7 @@ request
             .send({
                 template: 'account-report',
                 message: {
+                    from: 'checkme@softsky.company',
                     to: emailToCheck
                 },
                 locals: {
@@ -104,15 +106,12 @@ request
             .catch(console.error)
     })
     .catch((err: any) => {
-        console.error('Error!!!', err)
+        if (err.statusCode === 404) {
+            console.log('Address not found in the database!')
+        } else {
+            console.error(err)
+        }
     })
-
-export const mailto = (mobj: any) =>
-    (mobj.to ? `mailto:${mobj.to}?` : 'mailto:?') +
-    ['cc', 'bcc', 'subject', 'body']
-        .filter(it => _.isEmpty(mobj[it]) === false)
-        .map(it => `${it}=${mobj[it]}`)
-        .join('&')
 
 // app.set('view engine', 'pug');
 // app.set('views', path.join(__dirname, '../templates'));
