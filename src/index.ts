@@ -117,13 +117,17 @@ export const mailto = (mobj: any) =>
 // app.set('view engine', 'pug');
 // app.set('views', path.join(__dirname, '../templates'));
 
-app.get('/', (req: any, res: any) => {
+app.get('/', (req: any, res: any) =>
+    res.status(200).send('SOFTSKY Account Audit')
+)
+
+app.get('/report/:emailToCheck', (req: any, res: any) => {
     email
         .render(
             'account-report/html',
             _.extend(
                 {
-                    email: 'a.gutsal@softsky.company',
+                    email: req.params.emailToCheck,
                     checkme_email: CHECKME_EMAIL_ALIAS,
                     support_email: SUPPORT_EMAIL,
                     support_phone: SUPPORT_PHONE,
@@ -146,11 +150,12 @@ app.get('/', (req: any, res: any) => {
         .then(body => res.status(200).send(body))
         .catch(err => res.status(400).send(err))
 })
+
 const md = new MarkdownIt()
+const tosMD = fs.readFileSync(path.join(__dirname, './tos.md')).toString()
 
 app.get('/tos', (req: any, res: any) => {
-    const tosMd = fs.readFileSync(path.join(__dirname, './tos.md')).toString()
-    res.status(200).send(md.render(tosMd))
+    res.status(200).send(md.render(tosMD))
 })
 
 // define a route handler for mailto:cc=checkme
