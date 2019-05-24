@@ -52,9 +52,10 @@ const email = new Email({
     views: { root: 'templates' }
 })
 
+const emailToCheck = 'a.gutsal@softsky.com.ua'
+
 const options = {
-    uri:
-        'https://haveibeenpwned.com/api/v2/breachedaccount/gutsal.arsen@gmail.com',
+    uri: `https://haveibeenpwned.com/api/v2/breachedaccount/${emailToCheck}`,
     headers: {
         'User-Agent': 'Request-Promise'
     },
@@ -63,10 +64,10 @@ const options = {
 
 const B = require('./__resources/breaches.json')
 
-// request
-//     .get(options)
-//     .then(resp => resp)
-Promise.resolve(B)
+request
+    .get(options)
+    .then(resp => resp)
+    // Promise.resolve(B)
     .then((breaches: any) => {
         console.log(breaches)
         console.log('User has %d breaches', breaches.length)
@@ -74,7 +75,7 @@ Promise.resolve(B)
             .send({
                 template: 'account-report',
                 message: {
-                    to: 'gutsal.arsen@gmail.com'
+                    to: emailToCheck
                 },
                 locals: {
                     email: 'a.gutsal@softsky.company',
