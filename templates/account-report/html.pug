@@ -112,12 +112,12 @@ mixin header
 mixin super-heading
 	tr
 		td(style="font-size: 0; background-color: #36424F; text-align: center; padding: 16px 0")
-			+ie-open(({cell: 400}))
+			+ie-open(({cell: 300}))
 			div(style="display: inline-block;")
-				table(cellspacing="0" cellpadding="0" border="0" width="400"): tr: td(class="u-textFallback" style="font-weight: bold; text-align: left; font-size: 19px; color: white; padding: 7px 20px; font-family: Montserrat, Arial, sans-serif; line-height: 1.4") ACCOUNT AUDIT<br/> REPORT<br/>
-			+ie-col(({cell: 400}))
+				table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="font-weight: bold; text-align: left; font-size: 19px; color: white; padding: 7px 20px; font-family: Montserrat, Arial, sans-serif; line-height: 1.4") ACCOUNT AUDIT<br/> REPORT<br/>
+			+ie-col(({cell: 300}))
 			div(style="display: inline-block;")
-				table(cellspacing="0" cellpadding="0" border="0" width="400"): tr: td(class="u-textFallback" style="text-align: right; font-size: 14px; color: white; padding: 7px 20px; font-family: Montserrat, Arial, sans-serif; line-height: 1.7") Transaction ID: #{transactionId}<br>Date: #{reportDate}
+				table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="text-align: right; font-size: 14px; color: white; padding: 7px 20px; font-family: Montserrat, Arial, sans-serif; line-height: 1.7") Transaction ID: #{transactionId}<br>Date: #{reportDate}
 			+ie-close
 		
 
@@ -126,33 +126,11 @@ mixin super-heading
 mixin intro-block
 	tr
 		td(style="font-size: 0; background-color: white; text-align: center; padding: 15px 0 35px")
-			+ie-open(({cell: 400}))
+			+ie-open(({cell: 300}))
 			div(style="display: inline-block; vertical-align: top")
-				table(cellspacing="0" cellpadding="0" border="0" width="400"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
+				table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
 					p Hi #{name.full}
-					p We've checked against #[strong #{breached_count}] databases if #[strong #{email}] account has been compromised in any data breach. Currently we have found it in #{breaches.length} breached records.
-					p
-					p Although we're still in beta, you can also get DETAILED REPORT if you purchase yearly subscription to our service with 25% discount (limited time offer). Get notified when future pwnage occurs and your account is compromised for as low as USD $75/yr.
-					p Please, find the summary report below.
-			+ie-col(({cell: 298}))
-			div(style="display: inline-block; vertical-align: top")
-				table(cellspacing="0" cellpadding="0" bor der="0" width="298")
-					tr: td(style="padding: 15px 20px")
-						table(cellspacing="0" cellpadding="0" border="0" width="100%")
-							tr: td(class="u-textFallback" style="line-height: 1.5; font-family: Montserrat, Arial, sans-serif; border: 1px solid #CCCCCC; background-color: #EDEDED; color: #777777; font-size: 14px; padding: 30px 20px; text-align: left") Bank Details:<p style="font-weight: bold">Bank: FNB<br />Acc: 62345047915<br />Branch: 250655<br />Acc Type: Cheque<br />Acc Holder: RunwaySale<br />Reference Number: 17041100002176</p>
-							tr: td(style="padding-top: 15px;").
-								  <!--[if mso]>
-								  <v:rect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://www.runwaysale.co.za/main/sales/order/history/" style="height:45px;v-text-anchor:middle;width:260px;" stroke="f" fillcolor="#F05032">
-									<w:anchorlock/>
-									<center>
-								  <![endif]-->                                                                  
-									  <a class="u-textFallback" href="mailto:support@softsky.company?subject=Payment completed"
-								style="background-color:#F05032;color:#ffffff;display:block;font-family:sans-serif;font-weight:bold;line-height:45px;text-align:center;text-decoration:none;width:260px;-webkit-text-size-adjust:none; font-family: Montserrat, Arial, sans-serif; font-size: 14px;">EMAIL PROOF OR PAYMENT</a>
-								  <!--[if mso]>
-									</center>
-								  </v:rect>
-								<![endif]-->
-			+ie-close
+					p Your email (#[strong #{email}]) was found in #{breaches.length} out of #[strong #{breached_count}] databases of breached accounts. Please see the details below.  
 
 //- Button
 mixin button(caption, href, disabled)
@@ -182,9 +160,9 @@ mixin small-header
 mixin info-block
 	tr
 		td(style="border-bottom: 1px solid #CCCCCC; background-color: #EDEDED; padding: 15px 0px; text-align: center; font-size: 0")
-			+ie-open(({cell: 400}))
+			+ie-open(({cell: 300}))
 			div(style="display: inline-block; vertical-align: top")
-				table(cellspacing="0" cellpadding="0" border="0" width="400")
+				table(cellspacing="0" cellpadding="0" border="0" width="300")
 					tr
 						td(class="u-textFallback" style="line-height: 1.5; font-family: Montserrat, Arial, sans-serif; color: #777777; font-size: 14px; padding: 15px 0 0 40px; text-align: left") Payment Method:
 						td(class="u-textFallback" style="line-height: 1.5; font-family: Montserrat, Arial, sans-serif; color: #777777; font-size: 14px; padding: 15px 40px 0 0; text-align: right; font-weight: bold") EFT
@@ -192,10 +170,10 @@ mixin info-block
 						td(class="u-textFallback" style="line-height: 1.5; font-family: Montserrat, Arial, sans-serif; color: #777777; font-size: 14px; padding: 3px 0 15px 40px; text-align: left") Total Cost:
 						td(class="u-textFallback" style="line-height: 1.5; font-family: Montserrat, Arial, sans-serif; color: #777777; font-size: 14px; padding: 3px 40px 15px 0; text-align: right; font-weight: bold") R12,000,000
 
-			+ie-col(({cell: 400}))
+			+ie-col(({cell: 300}))
 
 			div(style="display: inline-block; vertical-align: top")
-				table(cellspacing="0" cellpadding="0" border="0" width="400")
+				table(cellspacing="0" cellpadding="0" border="0" width="300")
 					tr
 						td(class="u-textFallback" style="line-height: 1.5; font-family: Montserrat, Arial, sans-serif; color: #777777; font-size: 14px; padding: 15px 40px; text-align: left") Delivery to:<p style="font-weight: bold">11 Example Street<br>Example Suburb<br>Cape Town<br>7130</p>
 			+ie-close
@@ -206,15 +184,15 @@ mixin info-block
 mixin item-order(breach, shouldBlur)
 	tr(style=(shouldBlur?"filter:blur(5px)":""))
 		td(style="border-top: 1px solid #EDEDED; background-color: white; font-size: 0; padding: 30px 0; text-align: center;")
-			+ie-open(({cell: 400}))
+			+ie-open(({cell: 300}))
 			div(style="display: inline-block; vertical-align: top")
-				table(cellspacing="0" cellpadding="0" border="0" width="400" valign="top"): tr
+				table(cellspacing="0" cellpadding="0" border="0" width="300" valign="top"): tr
 					td(style="padding: 0 20px;background-color:#EDEDED;text-align:center;width:150px")
 						img(src=breach.LogoPath width="82px" style="border: 0px solid #D4D4D4;" + (shouldBlur?";filter:blur(50px)":""))
 					td(class="u-textFallback" style="line-height: 1.4; padding: 20px; color: #666666; text-align: left; font-size: 14px; font-family: Montserrat, Arial, sans-serif;") <b>#{breach.Title}</b><br>!{breach.Description}
-			+ie-col(({cell: 400}))
+			+ie-col(({cell: 300}))
 			div(style="display: inline-block; vertical-align: top;align:right;text-align:right")
-				table(cellspacing="0" cellpadding="0" border="0" width="400")
+				table(cellspacing="0" cellpadding="0" border="0" width="300")
 					tr: td(class="u-textFallback" style="font-size: 14px; padding: 15px 40px 0 0; color: #666666; text-align: right; font-size: 14px; font-family: Montserrat, Arial, sans-serif; line-height: 1.4") <b>Data classes</b>
 					each cl in breach.DataClasses
 						tr: td(class="u-textFallback" style="font-size: 14px; padding: 0px 40px 0 0; color: #666666; text-align: right; font-size: 14px; font-family: Montserrat, Arial, sans-serif; line-height: 1.4") #{cl}
@@ -228,7 +206,7 @@ mixin item-order(breach, shouldBlur)
 mixin order-total
 	tr
 		td(style="border-top: 1px solid #CCCCCC; background-color: #EDEDED; padding: 30px 20px 50px;")
-			table(cellspacing="0" cellpadding="0" border="0" width="400" align="right")
+			table(cellspacing="0" cellpadding="0" border="0" width="300" align="right")
 
 				tr: td(style="border-bottom: 1px solid #666666; border-top: 1px solid #666666; padding: 30px 20px")
 					table(cellspacing="0" cellpadding="0" border="0" width="100%")
@@ -255,16 +233,17 @@ mixin thank-you
 //--------------------------------
 mixin call-to-action
 	tr
-		td(class="u-textFallback" style="padding-top: 70px 20px 80px; text-align: center; font-size: 15px; font-family: Montserrat, Arial, sans-serif; color: #666666") <span style="line-height: 1.4">
+		td(class="u-textFallback" style="padding: 20px; text-align: center; font-size: 15px; font-family: Montserrat, Arial, sans-serif; color: #666666") <span style="line-height: 1.4">
 				div(style="display: inline-block; vertical-align: top")
-					table(cellspacing="0" cellpadding="0" border="0" width="400"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
+					table(cellspacing="0" cellpadding="0" border="0" width="300"): tr: td(class="u-textFallback" style="line-height: 1.4; text-align: left; font-size: 15px; color: #666666; padding: 15px 20px; font-family: Montserrat, Arial, sans-serif")
 						p Unlock blured items by <a href="#{mailto_friends}">sending email</a> to <strong>#{friend_count}</strong> of your friends telling them about our service.
-						p #[strong NOTE!] Please do not remove #{checkme_email} address from CC field of that email. <br/>By sending email to our service you're agreeing to our <a href="#">Terms of Service</a>
+						p #[strong NOTE!] Please do not remove #{checkme_email} address from CC field of that email. By sending email to our service you're agreeing to our <a href=#{tos_url}>Terms of Service</a>
 						+button('NOTIFY FRIENDS', mailto_friends, false)
                                         
 	tr
-		td(class="u-textFallback" style="padding-botton: 70px 20px 80px; text-align: center; font-size: 15px; font-family: Montserrat, Arial, sans-serif; color: #666666") <span style="line-height: 1.4"><b>Purchase yearly subscription</b><br> You can purchase yearly subscription with 25% discount (limited time offer). Once purchased, you will get DETAILED REPORT immediately..</span>
+		td(class="u-textFallback" style="padding: 20px; text-align: center; font-size: 15px; font-family: Montserrat, Arial, sans-serif; color: #666666") <span style="line-height: 1.4"><b>Purchase yearly subscription</b><br> You can purchase yearly subscription with 25% discount (limited time offer). Once purchased, you will get DETAILED REPORT immediately.</span>
 			+button('SUBSCRIBE ($75/yr)', mailto_friends, false)
+			p
                                         
 
 
@@ -292,10 +271,6 @@ mixin footer(props)
 									a(href="https://www.facebook.com/"): img(src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/330390/mail-facebook-x2.png" alt="Facebook" style="height: 25px;" height="25")
 								td(style="padding: 0 7px;")
 									a(href="https://www.instagram.com"): img(src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/330390/mail-instagram-x2.png" alt="Instagram" style="height: 25px;" height="25")
-								td(style="padding: 0 7px;")
-									a(href="https://plus.google.com/"): img(src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/330390/mail-google-plus-x2.png" alt="Google+" style="height: 25px;" height="25")
-								td(style="padding: 0 7px;")
-									a(href="https://za.pinterest.com/"): img(src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/330390/mail-pinterest-x2.png" alt="Pinterest" style="height: 25px;" height="25")
 					+ie-close
 
 
@@ -309,7 +284,7 @@ mixin footer(props)
 html
 	body
 		meta(content="telephone=no" name="format-detection")
-		link(href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet")
+		link(href="https://fonts.googleapis.com/css?family=Montserrat:300,700" rel="stylesheet")
 		+style-tags
 		
 		
@@ -357,7 +332,7 @@ html
 							// +info-block
 							each breach,idx in breaches
 								+item-order(breach, idx >= 3)
-							+order-total
+							//+order-total
 							+thank-you
 							
 							

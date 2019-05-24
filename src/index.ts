@@ -39,7 +39,7 @@ const email = new Email({
     message: {
         from: CHECKME_MAILBOX || 'checkme@softsky.company'
     },
-    juice: false,
+    juice: true,
     juiceResources: {
         preserveImportant: true,
         webResources: {
