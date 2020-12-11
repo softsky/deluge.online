@@ -107,6 +107,7 @@
         "set-value": "0.4.3",
         "smtp-client": "^0.3.1",
         "smtp-protocol": "^2.4.7",
-        "socks": "^2.3.2"
+        "socks": "^2.3.2",
+        "yargs-parser": "^13.1.2"
     }
 }
