@@ -93,7 +93,7 @@
         "dns-then": "^0.1.0",
         "dotenv": "^6.2.0",
         "dotenv-flow": "^0.2.0",
-        "elliptic": "^6.5.3",
+        "elliptic": "^6.5.4",
         "express": "^4.16.4",
         "imap-simple": "^4.3.0",
         "js-yaml": "^3.13.1",
