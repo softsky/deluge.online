@@ -98,7 +98,7 @@
         "imap-simple": "^4.3.0",
         "js-yaml": "^3.13.1",
         "kind-of": "^6.0.3",
-        "lodash": "^4.17.19",
+        "lodash": "^4.17.21",
         "mail": "^0.2.3",
         "mongoose": "5.7.5",
         "nodemailer": "^5.1.1",
